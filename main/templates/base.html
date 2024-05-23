@@ -1,0 +1,38 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Django Site{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="navbar-left">
+                <h1 class="site-title">My Django Site</h1>
+            </div>
+            <div class="navbar-right">
+                {% if user.is_authenticated %}
+                    <div class="user-info">
+                        <img src="{{ user.profile.avatar_url }}" alt="Avatar" class="avatar">
+                        <span class="username">{{ user.username }}</span>
+                        <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+                    </div>
+                {% else %}
+                    <a href="{% url 'login' %}" class="login-btn">Login</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="content-container">
+            {% block content %}
+            <!-- Content will be inserted here -->
+            {% endblock %}
+        </div>
+    </main>
+</body>
+</html>
