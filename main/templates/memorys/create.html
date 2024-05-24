@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+  <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=afa7208c-9fdc-41cc-a1bc-de043f221c17" type="text/javascript"></script>
+  <style>
+    html,
+    body,
+    #map {
+      width: 100%;
+      height: 500px;
+      padding: 0;
+      margin: 0;
+      position: relative;
+    }
+
+    .custom-placemark {  /* Метка */
+      width: 10px;
+      height: 10px;
+      background-color: violet;
+      border-radius: 50%;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1000; /* Поднимаем метку над картой */
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <h1>
+    {% block header %}
+      Добавить воспоминание
+    {% endblock %}
+  </h1>
+  <form id="memory-form" method="post">
+    {% csrf_token %}
+    <input type="text" name="title" class="input-field" placeholder="Название">
+      <textarea name="comment" class="input-field" placeholder="Комментарий" rows="4"></textarea>
+      <p>
+        <button type="button" id="locate-button" class='locate-btn'>Где я?</button>
+        Найдите место воспоминания на карте (сопоставьте маркер с местом)
+      </p>
+      <div class="map-container" id="map"></div>
+      <input type="hidden" name="latitude" id="id_latitude">
+      <input type="hidden" name="longitude" id="id_longitude">
+    <p><button type="submit" class="accept-btn">Сохранить</button></p>
+  </form>
+
+  <script>
+    var map;
+    var customPlacemark;
+
+    ymaps.ready(initMap);
+
+    function initMap() {
+      map = new ymaps.Map('map', {
+        center: [55.751244, 37.618423], // Москва
+        zoom: 10,
+        controls: []
+      });
+
+      // Создаем собственную метку поверх карты
+      customPlacemark = document.createElement('div');
+      customPlacemark.className = 'custom-placemark';
+      document.getElementById('map').appendChild(customPlacemark);
+
+      // Обновляем положение
+      map.events.add('boundschange', function(event) {
+        var mapCenter = map.getGlobalPixelCenter();
+        var mapContainer = map.container.getSize();
+        customPlacemark.style.left = (mapContainer[0] / 2) + 'px';
+        customPlacemark.style.top = (mapContainer[1] / 2) + 'px';
+      });
+
+      // Обработчик события нажатия на кнопку "локейт"
+      document.getElementById('locate-button').addEventListener('click', function() {
+        ymaps.geolocation.get().then(function(result) {
+          var userCoords = result.geoObjects.get(0).geometry.getCoordinates();
+          map.setCenter(userCoords);
+          map.setZoom(15);
+        });
+      });
+
+      // Обработчик события отправки формы
+      document.getElementById('memory-form').addEventListener('submit', function() {
+        var mapCenter = map.getCenter();
+        document.getElementById('id_latitude').value = mapCenter[0].toFixed(6); // Округляем до 6 знаков после запятой
+        document.getElementById('id_longitude').value = mapCenter[1].toFixed(6);
+      });
+    }
+  </script>
+
+  
+
+
+{% endblock %}

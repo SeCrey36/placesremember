@@ -1,12 +1,120 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-</head>
-<body>
-    <h2>Welcome, {{ user.username }}</h2>
-    <a href="{% url 'logout' %}">Logout</a>
-</body>
-</html>
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    h1 {
+        text-align: center;
+    }
+    .memory-list {
+        list-style: none;
+        padding: 0;
+    }
+    .memory-item {
+        display: flex;
+        justify-content: space-between;
+        background: white;
+        margin-bottom: 20px;
+        padding: 15px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .memory-item-content {
+        flex: 1;
+        margin-right: 20px;
+    }
+    .memory-item a {
+        text-decoration: none;
+        color: #007bff;
+        font-weight: bold;
+    }
+    .memory-item a:hover {
+        text-decoration: underline;
+    }
+    .memory-details {
+        margin-top: 10px;
+        font-size: 14px;
+        color: #555;
+    }
+    .memory-map {
+        width: 300px;
+        height: 200px;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+    .no-memories {
+        text-align: center;
+        margin-top: 20px;
+    }
+    .no-memories a {
+        display: inline-block;
+        padding: 10px 20px;
+        
+        color: white;
+        background: #007bff;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+    .no-memories a:hover {
+        background: #0056b3;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Добро пожаловать!</h1>
+    <div class="no-memories">
+        <p>Здесь ты можешь создавать и просматривать свои воспоминания. </p><a href="{% url 'create_memory' %}">Создать новое?</a>
+    </div>
+        <h2>Твои воспоминания: </h2>
+    {% if links %}
+        <ul class="memory-list">
+            {% for link in links %}
+                <li class="memory-item">
+                    <div class="memory-item-content">
+                        <h2><a href="{{ link.url }}">{{ link.title }}</a></h2>
+                        <div class="memory-details">
+                            <p>{{ link.comment }}</p>
+                            <p>Создано: {{ link.created_at|date:"d M Y" }}</p>
+                        </div>
+                    </div>
+                    <div class="memory-map" id="map-{{ link.id }}"></div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div class="no-memories">
+            <p>У тебя нет воспоминаний</p>
+        </div>
+    {% endif %}
+</div>
+
+<script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=ваш_апи_ключ" type="text/javascript"></script>
+<script>
+    ymaps.ready(function () {
+        {% for link in links %}
+            var map{{ link.id }} = new ymaps.Map('map-{{ link.id }}', {
+                center: [{{ link.latitude }}, {{ link.longitude }}],
+                zoom: 10,
+                controls: []
+            });
+            var placemark{{ link.id }} = new ymaps.Placemark([{{ link.latitude }}, {{ link.longitude }}], {
+                balloonContent: '{{ link.title }}'
+            });
+            map{{ link.id }}.geoObjects.add(placemark{{ link.id }});
+        {% endfor %}
+    });
+</script>
+{% endblock %}

@@ -12,7 +12,7 @@ class Memory(models.Model):
     comment = models.TextField()
     latitude = models.FloatField()
     longitude = models.FloatField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateField(auto_now_add=True)
 
     def __str__(self):
         return self.title

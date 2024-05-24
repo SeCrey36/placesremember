@@ -1,0 +1,79 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+.header {
+    width: 100%;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+}
+
+.site-title {
+    margin: 0;
+    font-size: 24px;
+}
+
+.navbar-left {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-left img {
+    height: 50px; /* Задаем небольшую высоту логотипа */
+    margin-right: 10px;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.username {
+    margin-right: 20px;
+    font-size: 18px;
+}
+
+.logout-btn,
+.login-btn {
+    color: #fff;
+    text-decoration: none;
+    background-color: #d9534f;
+    padding: 8px 16px;
+    border-radius: 4px;
+}
+
+.logout-btn:hover,
+.login-btn:hover {
+    background-color: #c9302c;
+}
+
+.content-container {
+    width: 80%;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}

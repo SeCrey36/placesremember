@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+  <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=afa7208c-9fdc-41cc-a1bc-de043f221c17" type="text/javascript"></script>
+  <style>
+    html,
+    body,
+    #map {
+      width: 100%;
+      height: 500px;
+      padding: 0;
+      margin: 0;
+      position: relative;
+    }
+
+    .custom-placemark {
+      width: 10px;
+      height: 10px;
+      background-color: violet;
+      border-radius: 50%;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1000;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <h1>
+    {% block header %}
+      Посмотреть воспоминание
+    {% endblock %}
+  </h1>
+  <form id="memory-form" method="post">
+    {% csrf_token %}
+    <input type="text" name="title" class="input-field" placeholder="Название" value="{{ form.instance.title }}">
+    <textarea name="comment" class="input-field" placeholder="Комментарий" rows="4">{{ form.instance.comment }}</textarea>
+    <p>
+      <button type="button" id="locate-button" class="locate-btn">Где я?</button>
+      Вы можете изменить место воспоминания
+    </p>
+    <div class="map-container" id="map"></div>
+    <input type="hidden" name="latitude" id="id_latitude" value="{{ form.instance.latitude }}">
+    <input type="hidden" name="longitude" id="id_longitude" value="{{ form.instance.longitude }}">
+    <p>
+      <button type="submit" class="accept-btn">Сохранить</button>
+      <button type="button" id="delete-button" class="delete-btn">Удалить</button>
+      <a href="{% url 'dashboard' %}" class="back-btn">Назад к списку</a>
+    </p>
+  </form>
+
+  <script>
+    var map;
+    var customPlacemark;
+
+    ymaps.ready(initMap);
+
+    function initMap() {
+      var latitude = {{ form.instance.latitude|default:55.751244 }};
+      var longitude = {{ form.instance.longitude|default:37.618423 }};
+      var zoomLevel = 15; 
+
+      map = new ymaps.Map('map', {
+        center: [latitude, longitude],
+        zoom: zoomLevel,
+        controls: []
+      });
+
+      customPlacemark = document.createElement('div');
+      customPlacemark.className = 'custom-placemark';
+      document.getElementById('map').appendChild(customPlacemark);
+
+      map.events.add('boundschange', function(event) {
+        var mapCenter = map.getGlobalPixelCenter();
+        var mapContainer = map.container.getSize();
+        customPlacemark.style.left = (mapContainer[0] / 2) + 'px';
+        customPlacemark.style.top = (mapContainer[1] / 2) + 'px';
+      });
+
+      document.getElementById('locate-button').addEventListener('click', function() {
+        ymaps.geolocation.get().then(function(result) {
+          var userCoords = result.geoObjects.get(0).geometry.getCoordinates();
+          map.setCenter(userCoords);
+          map.setZoom(15);
+        });
+      });
+
+      document.getElementById('memory-form').addEventListener('submit', function() {
+        var mapCenter = map.getCenter();
+        document.getElementById('id_latitude').value = mapCenter[0].toFixed(6);
+        document.getElementById('id_longitude').value = mapCenter[1].toFixed(6);
+      });
+
+      document.getElementById('delete-button').addEventListener('click', function() {
+        if (confirm('Вы уверены, что хотите удалить это воспоминание?')) {
+          fetch('{% url "delete_memory" form.instance.id %}', {
+            method: 'DELETE',
+            headers: {
+              'X-CSRFToken': '{{ csrf_token }}',
+              'Content-Type': 'application/json'
+            }
+          }).then(response => {
+            if (response.ok) {
+              window.location.href = '{% url "dashboard" %}';
+            } else {
+              alert('Произошла ошибка при удалении воспоминания.');
+            }
+          });
+        }
+      });
+    }
+  </script>
+{% endblock %}
