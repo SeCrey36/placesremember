@@ -1,0 +1,69 @@
+# Python
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+*.pyd
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Django
+*.log
+*.pot
+*.py[cod]
+*.sqlite3
+*.pyo
+*.pyd
+__pycache__/
+db.sqlite3
+media
+staticfiles
+.DS_Store
+*.pid
+*.seed
+*.cover
+*.coverage
+*.coverage.*
+.cache
+.coverage
+.coverage.*
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+*.sql
+*.db
+*.bak
+*.swp
+*~
+
+# Virtualenv
+venv/
+ENV/
+env/
+.env/
+.venv/
+ENV.bak/
+venv.bak/
+env.bak/
+.venv.bak/
+
+# VS Code
+.vscode/
+.settings/
+
+# pytest
+.pytest_cache/
+
+# VS Code
+.vscode/
+.history
+
+# Environment variables
+.env
+.env.local
+.env.*.local
