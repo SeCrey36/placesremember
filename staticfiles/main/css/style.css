@@ -2,6 +2,7 @@ body {
     margin: 0;
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
+    line-height: 1.6;
 }
 
 .header {
@@ -20,6 +21,16 @@ body {
 .site-title {
     margin: 0;
     font-size: 24px;
+}
+
+.navbar-left {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-left img {
+    height: 50px; /* Задаем небольшую высоту логотипа */
+    margin-right: 10px;
 }
 
 .navbar-right {
@@ -45,7 +56,9 @@ body {
 }
 
 .logout-btn,
-.login-btn {
+.login-btn,
+.delete-btn,
+.locate-btn {
     color: #fff;
     text-decoration: none;
     background-color: #d9534f;
@@ -53,9 +66,23 @@ body {
     border-radius: 4px;
 }
 
+.accept-btn {
+    color: #fff;
+    text-decoration: none;
+    background-color: #59ff8b;
+    padding: 8px 16px;
+    border-radius: 4px;
+}
+
 .logout-btn:hover,
-.login-btn:hover {
+.login-btn:hover,
+.locate-btn:hover,
+.delete-btn:hover {
     background-color: #c9302c;
+}
+
+.accept-btn:hover {
+    background-color: #28b401;
 }
 
 .content-container {
@@ -66,4 +93,23 @@ body {
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
+}
+
+.input-field {
+    width: 97%;
+    padding: 10px;
+    margin-bottom: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+
+.map-container {
+    width: 100%;
+    height: 500px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    overflow: hidden;
 }
