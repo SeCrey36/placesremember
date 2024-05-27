@@ -2,6 +2,11 @@
 
 
 {% block content %}
+    {% if user.is_authenticated %}
+        <script type="text/javascript">
+            window.location.href = "{% url 'dashboard' %}";
+        </script>
+    {% else %}
         <h1>Добро пожаловать на PlacesRemember!</h1>
         <p><strong>Сайт, где ваши воспоминания оживают!</strong></p>
         <a href="{% url 'social:begin' 'vk-oauth2' %}?next={{ request.path }}">Login with VK</a>
@@ -28,5 +33,5 @@
         </ul>
 
         <p>Присоединяйтесь к сообществу PlacesRemember и начинайте сохранять свои воспоминания уже сегодня! Сделайте так, чтобы важные моменты вашей жизни никогда не были забыты.</p>
-
+    {% endif %}
 {% endblock %}

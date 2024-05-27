@@ -21,7 +21,7 @@
             <div class="navbar-right">
                 {% if user.is_authenticated %}
                     <div class="user-info">
-                        <img src="{{ user.profile.avatar_url }}" alt="Avatar" class="avatar">
+                        <img src="{{ user.avatar_url }}" alt="Avatar" class="avatar">
                         <span class="username">{{ user.username }}</span>
                         <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
                     </div>
